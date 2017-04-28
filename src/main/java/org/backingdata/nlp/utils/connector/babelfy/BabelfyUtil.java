@@ -269,7 +269,7 @@ public class BabelfyUtil {
 				+ "government and local government to celebrate Jonah's life,\" Hart added. \"We have agreed that there will be a "
 				+ "public memorial service and that will be followed by a private family church service.\"";
 
-		List<SemanticAnnotation> bfyAnnotations = BabelfyUtil.disambiguateText("72f9a677-054b-4d6c-a58b-8ab74988a615", inputText, Language.EN);
+		List<SemanticAnnotation> bfyAnnotations = BabelfyUtil.disambiguateText("PUT_YOUR_BABELFY_API_KEY", inputText, Language.EN);
 
 		for(SemanticAnnotation semAnnBabelnet : bfyAnnotations) {
 			System.out.println("\n*******************************************");
@@ -380,7 +380,7 @@ public class BabelfyUtil {
 		}
 		listSentences.add(listToken);
 
-		List<SemanticAnnotation> semAnnList = disambiguateTokenSentList("72f9a677-054b-4d6c-a58b-8ab74988a615", listSentences, Language.EN);
+		List<SemanticAnnotation> semAnnList = disambiguateTokenSentList("PUT_YOUR_BABELFY_API_KEY", listSentences, Language.EN);
 		for(SemanticAnnotation semAnn : semAnnList) {
 			System.out.println("\n*******************************************");
 			System.out.println("BabelNet URL: " + ((semAnn.getBabelNetURL() != null) ? semAnn.getBabelNetURL() : "NULL"));

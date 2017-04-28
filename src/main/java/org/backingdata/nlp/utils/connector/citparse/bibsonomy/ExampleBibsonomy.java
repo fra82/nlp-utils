@@ -28,10 +28,10 @@ public class ExampleBibsonomy {
 				+ "arXiv preprint arXiv:1409.0473", "francesco82", "de8ce60b98de517ef533df6e860dedd6", 15);
 				
 		for (BibTexWrap post : list) {
-			logger.info(post.getBibtexKey());
-			logger.info(post.getTitle());
-			logger.info(post.getAuthorList());
-			logger.info(post.getInstitution());
+			System.out.println(post.getBibtexKey());
+			System.out.println(post.getTitle());
+			System.out.println(post.getAuthorList());
+			System.out.println(post.getInstitution());
 		}
 	}
 }

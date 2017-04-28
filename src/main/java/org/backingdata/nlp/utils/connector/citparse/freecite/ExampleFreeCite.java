@@ -29,7 +29,7 @@ public class ExampleFreeCite {
 		
 		List<FreeCiteResult> parsingResults = FreeCiteConn.parseCitations(citations, 15);
 		
-		parsingResults.stream().forEach((res) -> logger.info("Parsed citations:\n " + res.toString()));
+		parsingResults.stream().forEach((res) -> System.out.println("Parsed citations:\n " + res.toString()));
 		
 	}
 
