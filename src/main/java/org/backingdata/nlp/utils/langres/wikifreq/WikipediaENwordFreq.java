@@ -10,7 +10,7 @@ import org.apache.log4j.Logger;
 import org.backingdata.nlp.utils.Manage;
 
 import au.com.bytecode.opencsv.CSVReader;
-import gnu.trove.map.hash.TObjectIntHashMap;
+import gnu.trove.TObjectIntHashMap;
 
 /**
  * File with word frequency lists of wikipedia extracted from the following web:<P>

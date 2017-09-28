@@ -40,7 +40,9 @@ import cc.mallet.types.InstanceList;
  *
  */
 public class Lda {
-
+	
+	public static String pathToStopWordList = "/path/to/stop/word/list";
+	
 	/**
 	 * Read file to string
 	 * 
@@ -71,7 +73,7 @@ public class Lda {
 	 * @param basePath
 	 * @return
 	 */
-	private static Map<String, String> readDocuments(String basePath) {
+	public static Map<String, String> readDocuments(String basePath) {
 		Map<String, String> retMap = new TreeMap<String, String>();
 
 		File baseDir = new File(basePath);
@@ -110,7 +112,7 @@ public class Lda {
 		// Pipes: lowercase, tokenize, remove stopwords, map to features
 		pipes.add(new CharSequence2TokenSequence(Pattern.compile("\\p{L}[\\p{L}\\p{P}]+\\p{L}")));
 		pipes.add(new TokenSequenceLowercase());
-		pipes.add(new TokenSequenceRemoveStopwords(new File("/home/francesco/Downloads/SEPLN/TOPIC_ANALYSIS_v3/res/stopwords/stopwords_ES.list"), "UTF-8", false, false, false));
+		pipes.add(new TokenSequenceRemoveStopwords(new File(pathToStopWordList), "UTF-8", false, false, false));
 		pipes.add(new TokenSequence2FeatureSequence());
 
 		return pipes;
