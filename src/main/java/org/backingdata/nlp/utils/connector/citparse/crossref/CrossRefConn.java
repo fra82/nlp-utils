@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.http.HeaderElement;
 import org.apache.http.HeaderElementIterator;
 import org.apache.http.HttpEntity;
@@ -43,8 +44,8 @@ public class CrossRefConn {
 
 	private static Logger logger = Logger.getLogger(CrossRefConn.class);
 
-	private static final String serviceURL = "http://search.crossref.org/links";
-	private static final String serviceDOIURL = "http://search.crossref.org/dois";
+	private static final String serviceURL = "https://search.crossref.org/links";
+	private static final String serviceDOIURL = "https://search.crossref.org/dois";
 
 	private static CloseableHttpClient httpClient = null;
 
@@ -82,12 +83,14 @@ public class CrossRefConn {
 	 * 
 	 * @param citations List of bibliographic entries
 	 * @param timeout Response timeout (if not in [1, 299], set equal to 15)
-	 * @return
+	 * @return if the Pair left String is not empty, an eerror occurred, explained by the same string
 	 */
-	public static CrossRefResult parseCitations(String biblioEntry, int timeout) {
-
+	public static Pair<String, CrossRefResult> parseCitations(String biblioEntry, int timeout) {
+		
+		StringBuffer retStr = new StringBuffer("");
+		
 		if(StringUtils.isBlank(biblioEntry)) {
-			return null;
+			return Pair.of(retStr.append("Strig to parse empty or null.").toString(), null);
 		}
 
 		timeout = (timeout > 0 && timeout < 300) ? timeout : 15;
@@ -101,7 +104,7 @@ public class CrossRefConn {
 
 		post.setConfig(config);
 
-		post.setHeader("Content-Type", "application/jsonl");
+		post.setHeader("Content-Type", "application/json");
 
 		try {
 			String xml = "[ \"" + biblioEntry.replace("\"", "\\\"") + "\" ]";
@@ -154,7 +157,8 @@ public class CrossRefConn {
 		} catch (Exception e) {
 			logger.error("CrossRef processing exception / Exception " + e.getMessage());
 		}
-
+		
+		CrossRefResult xref = new CrossRefResult();
 		String parsingResults = response.get("body");
 		if(StringUtils.isNotBlank(parsingResults)) {
 
@@ -170,23 +174,21 @@ public class CrossRefConn {
 						// Get first result - to improve by ranking results thus choosing the best one
 						JSONObject firstResult = (JSONObject) resultArray.get(0);
 						if(firstResult != null) {
-
-							CrossRefResult xref = new CrossRefResult();
-
+							
 							if(firstResult.has("doi") && StringUtils.isNotBlank(firstResult.getString("doi"))) {
 								xref.setDoi(StringUtils.defaultIfBlank(firstResult.getString("doi"), ""));
 								if(firstResult.has("text") && StringUtils.isNotBlank(firstResult.getString("text")) ) {
 									xref.setOriginalText(StringUtils.defaultIfBlank(firstResult.getString("text"), ""));
 								}
-								
+
 								// Query by DOI to get more specific info
 								expandDOI(xref, firstResult.getString("doi"));
-
-								if(StringUtils.isNotBlank(xref.getTitle())) {
-									return xref;
-								}
+								
 							}
-							
+							else if(resultArray.length() == 1) {
+								retStr.append("ERROR: " + resultArray.toString());
+							}
+
 						}
 					}
 				}
@@ -198,7 +200,7 @@ public class CrossRefConn {
 
 		}
 
-		return null;
+		return Pair.of(retStr.toString(), xref);
 	}
 
 
@@ -316,7 +318,7 @@ public class CrossRefConn {
 			e.printStackTrace();
 			logger.error(e.getMessage());
 		}
-		
+
 	}
 
 }

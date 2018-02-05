@@ -139,7 +139,7 @@ public class SentiwordnetParser {
 
 	public static void main(String[] args) {
 		// Set resource folder
-		Manage.setResourceFolder("/hlocal/path/to/resource/folder");
+		Manage.setResourceFolder("/home/ronzano/Downloads/NLPutils-resources-1.0");
 		
 		// Init: load data in memory
 		SentiwordnetParser.initSentiwordnetParser();

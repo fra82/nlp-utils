@@ -45,9 +45,13 @@ public class SpotlightUtil {
 
 	private static HttpClient client = HttpClientBuilder.create().build();
 
-	private static String spotURL = "http://spotlight.sztaki.hu:2222/rest/annotate?";
+	private static String spotURL;
 	private static String charset = "UTF-8";
+	private static String language = "en";
 
+	static {
+		spotURL = "http://model.dbpedia-spotlight.org/"+ language + "/annotate?";	
+	}
 	
 	/**
 	 * Spot organization / location / city / state mentions in text
@@ -188,22 +192,22 @@ public class SpotlightUtil {
 	public static void main(String[] args) {
 		Map<String, String> surfaceURImap = SpotlightUtil.spotEntitiesByType("Theoretical Computer Science, TU Dresden, Germany", 15, SpotlightUtil.ORGANIZATIONtype);
 		for(Map.Entry<String, String> entry : surfaceURImap.entrySet()) {
-			System.out.println(entry.getKey() + "  -  " + entry.getValue());
+			System.out.println("ORGANIZATION: " + entry.getKey() + "  -  " + entry.getValue());
 		}
 		
 		surfaceURImap = SpotlightUtil.spotEntitiesByType("Theoretical Computer Science, TU Dresden, Germany", 15, SpotlightUtil.LOCATIONtype);
 		for(Map.Entry<String, String> entry : surfaceURImap.entrySet()) {
-			System.out.println(entry.getKey() + "  -  " + entry.getValue());
+			System.out.println("LOCATION: " + entry.getKey() + "  -  " + entry.getValue());
 		}
 		
 		surfaceURImap = SpotlightUtil.spotEntitiesByType("Theoretical Computer Science, TU Dresden, Germany", 15, SpotlightUtil.CITYtype);
 		for(Map.Entry<String, String> entry : surfaceURImap.entrySet()) {
-			System.out.println(entry.getKey() + "  -  " + entry.getValue());
+			System.out.println("CITY: " + entry.getKey() + "  -  " + entry.getValue());
 		}
 		
 		surfaceURImap = SpotlightUtil.spotEntitiesByType("Theoretical Computer Science, TU Dresden, Germany", 15, SpotlightUtil.STATEtype);
 		for(Map.Entry<String, String> entry : surfaceURImap.entrySet()) {
-			System.out.println(entry.getKey() + "  -  " + entry.getValue());
+			System.out.println("STATE: " + entry.getKey() + "  -  " + entry.getValue());
 		}
 	}
 
