@@ -8,7 +8,7 @@ This page provides an overview of the capabilities of the NLP-utils library. The
 
 The resources / models needed to execute this code as well as the explanation of how to use this library in your (Maven) Java project can be found at [How to import NLP-utils in your code](Import.md). Here also the [NLP-utils Javadoc](http://backingdata.org/nlp-utils/doc/) is available.  
 
-Please, consider that the code in the repo is not optimized nor extensively tested. For any issue please send an email to fr.ronzano AT gmail.com.  
+You can find the source code at: <a href="https://github.com/fra82/nlp-utils" target="_blank">https://github.com/fra82/nlp-utils</a>: consider that the code in the repo is not optimized nor extensively tested. For any issue please send an email to fr.ronzano AT gmail.com.  
   
   
   
