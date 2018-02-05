@@ -1,4 +1,5 @@
-**NLP-utils**
+<h1>NLP-utils</h1>
+<h3>Java library to perform basic NLP analyses / access to NLP resources and Web Service</h3>
 
 **Latest version: 1.0 (released on 5/2/2018)**
 
