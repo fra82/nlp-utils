@@ -3,7 +3,7 @@ repo_url: https://github.com/fra82/nlp-utils
 repo_name: NLP-utils GitHub
 theme: readthedocs
 site_description: Documentation of NLP-utils, a Java tool that collects utility methods to easily carry out several NLP-related tasks
-docs_dir: doc
+docs_dir: rtdoc
 include_search: true
 pages:
 - ['index.md', 'Home']
