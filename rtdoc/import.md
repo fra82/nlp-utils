@@ -1,6 +1,7 @@
 **How to import NLP-utils in your code**
 
-**Resources**:
+**Resources**:  
+  
 + <a href="http://backingdata.org/nlp-utils/doc/" target="_blank">NLP-utils Javadoc</a>  
 + <a href="http://backingdata.org/nlp-utils/NLPutils-resources-1.0.tar.gz" target="_blank">Download NLP-utils resources folder (file: NLPutils-resources-1.0.tar.gz)</a>  
   
