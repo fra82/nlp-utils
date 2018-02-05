@@ -37,7 +37,7 @@ Add to the POM of your Maven project the following repository:
   
 + **OPTION 2**:
 
-Download the JAR / dependencies Download the jar of the library together the libraries it depends on (lib folder).  
+<a href="http://backingdata.org/nlp-utils/nlp-utils-1.0-bin.zip" target="_blank">Download (file: nlp-utils-1.0-bin.zip)</a> the JAR / dependencies Download the jar of the library together the libraries it depends on (lib folder).  
   
   
   
