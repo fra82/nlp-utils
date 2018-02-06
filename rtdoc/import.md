@@ -28,8 +28,8 @@ Add to the POM of your Maven project the following repository:
 ```  
 <dependency>
 	<groupId>org.backingdata.nlp</groupId>
-	<artifactId>nlp-util</artifactId>
-	<version>0.1</version>
+	<artifactId>nlp-utils</artifactId>
+	<version>1.0</version>
 </dependency>
 ```  
   
