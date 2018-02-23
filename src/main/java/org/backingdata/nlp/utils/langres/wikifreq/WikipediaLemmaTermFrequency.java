@@ -24,7 +24,16 @@ public class WikipediaLemmaTermFrequency {
 	private static TObjectIntHashMap<String> wordCounter_EN = null;
 	private static TObjectIntHashMap<String> wordCounter_ES = null;
 	private static TObjectIntHashMap<String> wordCounter_CA = null;
-	
+
+	private static int maxWordFreq_EN = -1;
+	private static int maxWordFreq_ES = -1;
+	private static int maxWordFreq_CA = -1;
+
+	private static int minWordFreq_EN = -1;
+	private static int minWordFreq_ES = -1;
+	private static int minWordFreq_CA = -1;
+
+
 	/**
 	 * Load data from Wikipedia
 	 * 
@@ -40,6 +49,8 @@ public class WikipediaLemmaTermFrequency {
 			String tfidfFileName = Manage.getResourceFolder() + File.separator + "frequencies/wikipedia/";
 
 			TObjectIntHashMap<String> currentWordCounter = new TObjectIntHashMap<String>();
+			Integer minWordFreq = null;
+			Integer maxWordFreq = null;
 
 			switch(lang) {
 			case English:
@@ -80,7 +91,7 @@ public class WikipediaLemmaTermFrequency {
 				System.out.println("Loading term frequency file: " + tfidfFile.getAbsolutePath() + "...");
 
 				try(BufferedReader br = new BufferedReader(new FileReader(tfidfFile))) {
-					
+
 					for(String line; (line = br.readLine()) != null; ) {
 						line = line.trim();
 						try {
@@ -96,12 +107,18 @@ public class WikipediaLemmaTermFrequency {
 											termFrequ != null && termFrequ.trim().length() > 0) {
 
 										lemma = lemma.toLowerCase().trim();
-										
+
 										if(currentWordCounter.containsKey(lemma)) {
-											currentWordCounter.put(lemma, currentWordCounter.get(lemma) +  Integer.valueOf(termFrequ));
+											Integer newWordCounter = currentWordCounter.get(lemma) + Integer.valueOf(termFrequ);
+											if(minWordFreq == null || newWordCounter < minWordFreq) minWordFreq = newWordCounter;
+											if(maxWordFreq == null || newWordCounter > maxWordFreq) maxWordFreq = newWordCounter;
+											currentWordCounter.put(lemma, newWordCounter);
 										}
 										else {
-											currentWordCounter.put(lemma, Integer.valueOf(termFrequ));
+											Integer newWordCounter = Integer.valueOf(termFrequ);
+											if(minWordFreq == null || newWordCounter < minWordFreq) minWordFreq = newWordCounter;
+											if(maxWordFreq == null || newWordCounter > maxWordFreq) maxWordFreq = newWordCounter;
+											currentWordCounter.put(lemma, newWordCounter);
 										}
 									}
 
@@ -115,6 +132,24 @@ public class WikipediaLemmaTermFrequency {
 				} catch (IOException e) {
 					throw new Exception("Impossible to read tfidf list for " + lang + " from file: '" +
 							((tfidfFileName != null) ? tfidfFileName : "NULL")+ "' - " + e.getMessage());
+				}
+
+				switch(lang) {
+				case English:
+					minWordFreq_EN = minWordFreq;
+					maxWordFreq_EN = maxWordFreq;
+					break;
+				case Spanish:
+					minWordFreq_ES = minWordFreq;
+					maxWordFreq_ES = maxWordFreq;
+					break;
+				case Catalan:
+					minWordFreq_CA = minWordFreq;
+					maxWordFreq_CA = maxWordFreq;
+					break;
+				default:
+					minWordFreq_EN = minWordFreq;
+					maxWordFreq_EN = maxWordFreq;
 				}
 				
 				logger.info("Loaded word frequencies of " + lang + " with: " + currentWordCounter.size() + " words.");
@@ -140,6 +175,14 @@ public class WikipediaLemmaTermFrequency {
 		wordCounter_EN = null;
 		wordCounter_ES = null;
 		wordCounter_CA = null;
+
+		maxWordFreq_EN = -1;
+		maxWordFreq_ES = -1;
+		maxWordFreq_CA = -1;
+
+		minWordFreq_EN = -1;
+		minWordFreq_ES = -1;
+		minWordFreq_CA = -1;
 
 		System.gc();
 	}
@@ -177,12 +220,12 @@ public class WikipediaLemmaTermFrequency {
 		if(lang == null) {
 			throw new Exception("Please, specify a language");
 		}
-		
+
 		if(lemma != null) {
 			lemma = lemma.trim().toLowerCase().replace(" ", "_");
 
 			loadLemmaPOStermFrequencyMap(lang);
-			
+
 			TObjectIntHashMap<String> currentWordCounter = new TObjectIntHashMap<String>();
 
 			switch(lang) {
@@ -207,22 +250,94 @@ public class WikipediaLemmaTermFrequency {
 
 		return 0;
 	}
-	
+
+
+	/**
+	 * Maximum lemma frequency for a language
+	 * 
+	 * @param lang
+	 * @return
+	 * @throws Exception
+	 */
+	public static Integer getMaxLemmaOccurrencesCount(LangENUM lang) throws Exception {
+
+		if(lang == null) {
+			throw new Exception("Please, specify a language");
+		}
+
+		loadLemmaPOStermFrequencyMap(lang);
+
+
+		switch(lang) {
+		case English:
+			return maxWordFreq_EN;
+		case Spanish:
+			return maxWordFreq_ES;
+		case Catalan:
+			return maxWordFreq_CA;
+		default:
+			return maxWordFreq_EN;
+		}
+
+	}
+
+
+	/**
+	 * Minimum lemma frequency for a language
+	 * 
+	 * @param lang
+	 * @return
+	 * @throws Exception
+	 */
+	public static Integer getMinLemmaOccurrencesCount(LangENUM lang) throws Exception {
+
+		if(lang == null) {
+			throw new Exception("Please, specify a language");
+		}
+
+		loadLemmaPOStermFrequencyMap(lang);
+
+
+		switch(lang) {
+		case English:
+			return minWordFreq_EN;
+		case Spanish:
+			return minWordFreq_ES;
+		case Catalan:
+			return minWordFreq_CA;
+		default:
+			return minWordFreq_EN;
+		}
+
+	}
+
 
 	public static void main(String[] args) {
 		Manage.setResourceFolder("/home/ronzano/Downloads/NLPutils-resources-1.0");
 
 		try {
 
+			// Min and max lemma frequency Spanish
+			System.out.println("Spanish Wikipedia > min lemma freq: " + WikipediaLemmaTermFrequency.getMinLemmaOccurrencesCount(LangENUM.Spanish) + " - " + 
+					"max lemma freq: " + WikipediaLemmaTermFrequency.getMaxLemmaOccurrencesCount(LangENUM.Spanish));
+
+			// Min and max lemma frequency Catalan
+			System.out.println("Catalan Wikipedia > min lemma freq: " + WikipediaLemmaTermFrequency.getMinLemmaOccurrencesCount(LangENUM.Catalan) + " - " + 
+					"max lemma freq: " + WikipediaLemmaTermFrequency.getMaxLemmaOccurrencesCount(LangENUM.Catalan));
+
+			// Min and max lemma frequency English
+			System.out.println("English Wikipedia > min lemma freq: " + WikipediaLemmaTermFrequency.getMinLemmaOccurrencesCount(LangENUM.English) + " - " + 
+					"max lemma freq: " + WikipediaLemmaTermFrequency.getMaxLemmaOccurrencesCount(LangENUM.English));
+			
 			// Get the total number of occurrences of the word COCHE in Spanish
 			System.out.println("Word coche - total occurrences (Spanish Wikipedia): " + WikipediaLemmaTermFrequency.getLemmaOccurrencesCount(LangENUM.Spanish, "coche"));
-			
-			// Get the total number of occurrences of the word COCHE in Spanish
+
+			// Get the total number of occurrences of the word COCHE in Catalan
 			System.out.println("Word cotxe - total occurrences (Catalan Wikipedia): " + WikipediaLemmaTermFrequency.getLemmaOccurrencesCount(LangENUM.Catalan, "cotxe"));
-			
+
 			// Get the total number of occurrences of the word CAR in English
 			System.out.println("Word car - total occurrences: " + WikipediaLemmaTermFrequency.getLemmaOccurrencesCount(LangENUM.English, "car"));
-			
+
 		}
 		catch(Exception e) {
 			e.printStackTrace();
